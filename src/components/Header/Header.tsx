@@ -2,7 +2,7 @@ import { AppBar, Toolbar, Button, Grid } from '@mui/material';
 import { HeaderProps } from './Header.types';
 
 export function Header(props: HeaderProps) {
-  const { loggedIn } = props;
+  const { loggedIn, handleOpenLoginModal, handleOpenRegisterModal } = props;
 
   return (
     <AppBar
@@ -19,6 +19,7 @@ export function Header(props: HeaderProps) {
               variant='text'
               color='inherit'
               sx={{ fontFamily: 'Inter', fontSize: '1rem', textTransform: 'none' }}
+              onClick={handleOpenRegisterModal}
             >
               Register
             </Button>
@@ -31,6 +32,7 @@ export function Header(props: HeaderProps) {
               variant='text'
               color='inherit'
               sx={{ fontFamily: 'Inter', fontSize: '1rem', textTransform: 'none' }}
+              onClick={handleOpenLoginModal}
             >
               Login
             </Button>

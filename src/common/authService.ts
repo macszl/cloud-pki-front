@@ -4,7 +4,7 @@ import { JWTResponse, RegisterFormDTO } from '../components/RegisterForm/Registe
 
 export const registerUser = async (user: RegisterFormDTO) => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_DEV_API_URL}/auth/signup`, user);
+    const response = await axios.post(`${import.meta.env.VITE_PROD_API_URL}/auth/register`, user);
     console.log(`registerUser responded!`);
     return response;
   } catch (error) {
@@ -18,7 +18,7 @@ export const registerUser = async (user: RegisterFormDTO) => {
 
 export const loginUser = async (user: LoginFormDTO) => {
   try {
-    const { data } = await axios.post<JWTResponse>(`${import.meta.env.VITE_DEV_API_URL}/auth/signin`, user);
+    const { data } = await axios.post<JWTResponse>(`${import.meta.env.VITE_PROD_API_URL}/auth/login`, user);
     const token: string = data.token;
     localStorage.setItem('token', token);
   } catch (error) {

@@ -2,7 +2,7 @@ import { AppBar, Toolbar, Button, Grid } from '@mui/material';
 import { HeaderProps } from './Header.types';
 
 export function Header(props: HeaderProps) {
-  const { loggedIn, handleOpenLoginModal, handleOpenRegisterModal } = props;
+  const { loggedIn, handleOpenLoginModal, handleOpenRegisterModal, handleLogout } = props;
 
   return (
     <AppBar
@@ -45,6 +45,7 @@ export function Header(props: HeaderProps) {
               variant='text'
               color='inherit'
               sx={{ fontFamily: 'Inter', fontSize: '1rem', textTransform: 'none' }}
+              onClick={handleLogout}
             >
               Logout
             </Button>

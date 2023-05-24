@@ -1,10 +1,12 @@
 import { Box, Grid, Typography, TextField, Button } from '@mui/material';
 import { Formik, FormikHelpers, Field } from 'formik';
 import { loginUser } from '../../common/authService';
+import { FormProps } from '../../common/Form.types';
 import { PasswordInput } from '../PasswordInput/PasswordInput';
 import { LoginFormErrors, LoginFormValues, LoginFormDTO } from './LoginForm.types';
 
-export function LoginForm() {
+export function LoginForm(props: FormProps) {
+  const { setOpenStatusModal, setStatusModalMessage } = props;
   const minLength = 1;
   const validate = (values: { login: string; password: string }) => {
     const errors: LoginFormErrors = {};
@@ -34,8 +36,10 @@ export function LoginForm() {
           .then(() => {
             window.location.reload();
           })
-          .catch((res) => {
-            console.log(res);
+          .catch(() => {
+            //open a dialog menu with error
+            setOpenStatusModal(true);
+            setStatusModalMessage("Error. Please check your login and password.");
           })
           .finally(() => {
             setSubmitting(false);

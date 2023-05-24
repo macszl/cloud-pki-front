@@ -4,8 +4,11 @@ import '@fontsource/roboto';
 import { PasswordInput } from '../PasswordInput/PasswordInput';
 import { RegisterFormDTO, RegisterFormErrors, RegisterFormValues } from './RegisterForm.types';
 import { registerUser } from '../../common/authService';
+import { FormProps } from '../../common/Form.types';
 
-export function RegisterForm() {
+export function RegisterForm(props: FormProps) {
+  const { setOpenStatusModal, setStatusModalMessage } = props;
+
   const validate = (values: RegisterFormValues) => {
     const errors: RegisterFormErrors = {};
     const requiredFields = Object.keys(values) as (keyof RegisterFormValues)[];
@@ -36,10 +39,15 @@ export function RegisterForm() {
         };
         registerUser(dto)
           .then(() => {
-            setSubmitting(false);
+            setOpenStatusModal(true);
+            setStatusModalMessage('Successfully registered!.');
           })
-          .catch((res) => {
-            console.log(res);
+          .catch(() => {
+            setOpenStatusModal(true);
+            setStatusModalMessage('Error. Please try again later.');
+          })
+          .finally(() => {
+            setSubmitting(false);
           });
       }}
     >

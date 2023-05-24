@@ -63,7 +63,7 @@ export function ContentPage() {
             id: responseRows.id,
             name: responseRows.name,
             joined: responseRows.joined,
-            lastvisit: responseRows.lastvisit,
+            lastVisit: responseRows.lastVisit,
             counter: responseRows.counter,
           } as UserTableValues;
         });

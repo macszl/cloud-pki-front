@@ -8,7 +8,7 @@ export function UserTable(props: UserTableProps) {
     { field: 'id', headerName: 'ID', width: 70, editable: false, sortable: true },
     { field: 'name', headerName: 'Login', minWidth: 100, editable: false, sortable: true, flex: 1 },
     { field: 'joined', headerName: 'Joined date', minWidth: 100, editable: false, sortable: true, flex: 1 },
-    { field: 'lastVisit', headerName: 'Last visit date', minWidth: 100, editable: false, sortable: true, flex: 1 },
+    { field: 'lastvisit', headerName: 'Last visit date', minWidth: 100, editable: false, sortable: true, flex: 1 },
     { field: 'counter', headerName: 'Visit counter', minWidth: 100, editable: false, sortable: true, flex: 1 },
   ];
 

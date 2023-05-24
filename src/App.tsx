@@ -1,11 +1,13 @@
-import { Route, Routes } from "react-router-dom";
-import { ContentPage } from "./pages/ContentPage";
-
+import { Route, Routes } from 'react-router-dom';
+import { ContentPage } from './pages/ContentPage';
 
 export function App() {
   return (
     <Routes>
-      <Route path="/" element={<ContentPage />} />
+      <Route
+        path='/'
+        element={<ContentPage />}
+      />
     </Routes>
   );
 }

@@ -1,4 +1,7 @@
-export interface DecodedToken {
-  name: string;
-  isAdmin: boolean;
+export type DecodedToken = {
+  name: string,
+  isAdmin: boolean,
+  iat: number,
+  exp: number
 }
+

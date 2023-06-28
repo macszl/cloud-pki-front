@@ -1,4 +1,4 @@
-export interface UserTableValues {
+export type UserTableValues = {
   id: string;
   name: string;
   joined: string;
@@ -6,7 +6,7 @@ export interface UserTableValues {
   counter: number;
 }
 
-export interface UserTableDTO {
+export type UserTableDTO = {
   id: string;
   name: string;
   joined: string;
@@ -15,8 +15,7 @@ export interface UserTableDTO {
   password: string;
 }
 
-export interface UserTableProps {
+export type UserTableProps = {
   isLoading: boolean;
-  tableValues: UserTableValues[];
-  username: string;
+  setIsLoading: (value: boolean) => void;
 }

@@ -120,18 +120,21 @@ export function ItemForm(props: ItemFormProps) {
   };
 
   const handleCategoryChange = (event: React.SyntheticEvent, value: CategoriesTableDTO | null) => {
+    void event;
     if (value) {
       setCategory(value);
     }
   };
 
   const handleUserChange = (event: React.SyntheticEvent, value: UserTableDTO | null) => {
+    void event;
     if (value) {
       setUser(value);
     }
   };
 
   const handleIdChangeAutocomplete = (event: React.SyntheticEvent, value: string | null) => {
+    void event;
     if (value) {
       setId(value);
 

@@ -235,7 +235,7 @@ export function ContentPage() {
           isEditMode={editMode}
         />
       );
-    } else if (tableType === TableTypes.USERS) {
+    } else {
       return (
         <UserForm
           open={openDrawer}

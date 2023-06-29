@@ -77,6 +77,7 @@ export function CategoryForm(props: CategoryFormProps) {
   };
 
   const handleIdChangeAutocomplete = (event: React.SyntheticEvent, value: string | null) => {
+    void event
     if (value) {
       setId(value);
 

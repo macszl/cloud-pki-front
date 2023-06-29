@@ -7,7 +7,6 @@ export const AuthenticationContext = createContext<AuthenticationContextProps | 
 
 export function AuthenticationContextProvider({ children }: AuthenticationContextProviderProps) {
   const [isAuthenticated, setAuthenticated] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(true);
   const [name, setName] = useState<string | null>(null);
 
   useEffect(() => {
@@ -21,7 +20,6 @@ export function AuthenticationContextProvider({ children }: AuthenticationContex
         // User is authenticated
         setAuthenticated(true);
         setName(decodedToken.name);
-        setIsAdmin(decodedToken.isAdmin);
       }
     } else {
       // User is not authenticated

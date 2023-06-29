@@ -1,7 +1,8 @@
-import { Grid, CircularProgress, Typography } from '@mui/material';
+import { Grid, CircularProgress} from '@mui/material';
 import { GridColDef, DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { deleteCell } from '../../common/cellService';
 import { CellActions } from '../CellActions/CellActions';
 import { UserTableDTO, UserTableProps, UserTableValues } from './TableUser.types';
 
@@ -18,13 +19,22 @@ export function UserTable(props: UserTableProps) {
         id: responseRows.id,
         name: responseRows.name,
         joined: responseRows.joined,
-        lastVisit: responseRows.lastVisit,
+        lastvisit: responseRows.lastvisit,
         counter: responseRows.counter,
       } as UserTableValues;
-
     });
     setTableValues(tableValues);
     setIsLoading(false);
+  };
+
+  const handleDeleteItem = async (id: number) => {
+    deleteCell('/users', id)
+      .then(() => {
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const columns: GridColDef[] = [
@@ -40,19 +50,17 @@ export function UserTable(props: UserTableProps) {
       editable: false,
       sortable: false,
       flex: 1,
-      renderCell: (params) => <CellActions<UserTableValues> {...params}></CellActions>,
+      renderCell: ({ id }) => (
+        <CellActions
+          handleDeleteItem={handleDeleteItem}
+          id={Number(id)}
+        ></CellActions>
+      ),
     },
   ];
 
   useEffect(() => {
-    //create a new array with the data from the response
-    //and the date from the response
-    const controller = new AbortController();
-    
     fetchData();
-    return () => {
-      controller.abort();
-    };
   }, []);
 
   return (
@@ -85,3 +93,5 @@ export function UserTable(props: UserTableProps) {
     </Grid>
   );
 }
+
+  

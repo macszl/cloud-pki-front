@@ -2,7 +2,7 @@ export type UserTableValues = {
   id: string;
   name: string;
   joined: string;
-  lastVisit: string;
+  lastvisit: string;
   counter: number;
 }
 
@@ -10,7 +10,7 @@ export type UserTableDTO = {
   id: string;
   name: string;
   joined: string;
-  lastVisit: string;
+  lastvisit: string;
   counter: number;
   password: string;
 }

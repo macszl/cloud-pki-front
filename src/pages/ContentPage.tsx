@@ -9,6 +9,9 @@ import { AuthenticationContext } from '../components/AuthenticationContext/Authe
 import { TableTypes } from '../common/tableTypes';
 import { ItemsTable } from '../components/TableItems/TableItems';
 import { CategoriesTable } from '../components/TableCategories/TableCategories';
+import { CategoryForm } from '../components/AddCategoryForm/CategoryForm';
+import { ItemForm } from '../components/AddItemForm/ItemForm';
+import { UserForm } from '../components/AddUserForm/UserForm';
 
 export function ContentPage() {
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
@@ -16,7 +19,6 @@ export function ContentPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [tableType, setTableType] = useState<TableTypes>(TableTypes.USERS);
   const [statusModalMessage, setStatusModalMessage] = useState('');
-
   const context = useContext(AuthenticationContext);
   if (!context) {
     throw new Error('AuthenticationContext is null');
@@ -24,6 +26,8 @@ export function ContentPage() {
   const { setName, isAuthenticated, setAuthenticated } = context;
 
   const [openLoginModal, setOpenLoginModal] = useState(isAuthenticated);
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   const handleOpenLoginModal = () => {
     setOpenLoginModal(true);
@@ -54,6 +58,37 @@ export function ContentPage() {
     }, 2000);
   };
 
+  //this opens a modal called AddUserForm to add a user to the table
+  const handleAddRowUser = () => {
+    setEditMode(false);
+    setOpenDrawer(true);
+  };
+  //this opens a modal called AddItemForm to add an item to the table
+  const handleAddRowItems = () => {
+    setEditMode(false);
+    setOpenDrawer(true);
+  };
+  //this opens a modal called AddCategoryForm to add a category to the table
+  const handleAddRowCategories = () => {
+    setEditMode(false);
+    setOpenDrawer(true);
+  };
+
+  const handleEditRowUser = () => {
+    setEditMode(true);
+    setOpenDrawer(true);
+  };
+
+  const handleEditRowItems = () => {
+    setEditMode(true);
+    setOpenDrawer(true);
+  };
+
+  const handleEditRowCategories = () => {
+    setEditMode(true);
+    setOpenDrawer(true);
+  };
+
   const renderAddRowButton = () => {
     if (tableType === TableTypes.CATEGORIES) {
       return (
@@ -68,6 +103,13 @@ export function ContentPage() {
             sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
           >
             Add a row
+          </Button>
+          <Button
+            size='small'
+            onClick={handleEditRowCategories}
+            sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
+          >
+            Edit a row
           </Button>
           <Button
             size='small'
@@ -96,6 +138,13 @@ export function ContentPage() {
           </Button>
           <Button
             size='small'
+            onClick={handleEditRowItems}
+            sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
+          >
+            Edit a row
+          </Button>
+          <Button
+            size='small'
             onClick={() => {
               window.location.reload();
             }}
@@ -118,6 +167,13 @@ export function ContentPage() {
             sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
           >
             Add a row
+          </Button>
+          <Button
+            size='small'
+            onClick={handleEditRowUser}
+            sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
+          >
+            Edit a row
           </Button>
           <Button
             size='small'
@@ -161,12 +217,34 @@ export function ContentPage() {
       return null;
     }
   };
-  //this opens a modal called AddUserForm to add a user to the table
-  const handleAddRowUser = () => {};
-  //this opens a modal called AddItemForm to add an item to the table
-  const handleAddRowItems = () => {};
-  //this opens a modal called AddCategoryForm to add a category to the table
-  const handleAddRowCategories = () => {};
+
+  const renderAddForm = () => {
+    if (tableType === TableTypes.CATEGORIES) {
+      return (
+        <CategoryForm
+          open={openDrawer}
+          setOpen={setOpenDrawer}
+          isEditMode={editMode}
+        />
+      );
+    } else if (tableType === TableTypes.ITEMS) {
+      return (
+        <ItemForm
+          open={openDrawer}
+          setOpen={setOpenDrawer}
+          isEditMode={editMode}
+        />
+      );
+    } else if (tableType === TableTypes.USERS) {
+      return (
+        <UserForm
+          open={openDrawer}
+          setOpen={setOpenDrawer}
+          isEditMode={editMode}
+        />
+      );
+    }
+  };
 
   return (
     <Grid
@@ -260,6 +338,7 @@ export function ContentPage() {
           <Typography textAlign={'center'}> {statusModalMessage}</Typography>
         </Box>
       </Dialog>
+      {isAuthenticated && renderAddForm()}
     </Grid>
   );
 }

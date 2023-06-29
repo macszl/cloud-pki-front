@@ -1,19 +1,18 @@
 import { Grid, IconButton } from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
-import { deleteCell, editCell } from '../../common/cellService';
-export function CellActions<T>() {
+import { Delete } from '@mui/icons-material';
+
+export interface CellActionsProps {
+  handleDeleteItem: (id: number) => void;
+  id: number;
+}
+export function CellActions(props: CellActionsProps) {
+  const { handleDeleteItem, id } = props;
+  //get the row data we're working with
   return (
     <Grid>
       <IconButton
         onClick={() => {
-          editCell<T>();
-        }}
-      >
-        <Edit></Edit>
-      </IconButton>
-      <IconButton
-        onClick={() => {
-          deleteCell<T>();
+          handleDeleteItem(id);
         }}
       >
         <Delete></Delete>

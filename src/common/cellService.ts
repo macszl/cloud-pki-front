@@ -27,7 +27,7 @@ export const deleteCell = async <T>(deleteUrl: string, id: number) => {
       }
     }
 }
-export const addItem = async <T>(cell: T, addUrl: string) => {
+export const addCell = async <T>(cell: T, addUrl: string) => {
   try {
     await axios.post<T>(`${import.meta.env.VITE_PROD_API_URL}${addUrl}`, cell)
   }

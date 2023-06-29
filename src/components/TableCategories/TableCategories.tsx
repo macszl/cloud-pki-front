@@ -1,15 +1,15 @@
-import { Grid, CircularProgress } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { CellActions } from "../CellActions/CellActions";
-import { CategoriesTableValues, CategoriesTableDTO, CategoriesTableProps } from "./TableCategories.types";
+import { Grid, CircularProgress } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { deleteCell } from '../../common/cellService';
+import { CellActions } from '../CellActions/CellActions';
+import { CategoriesTableValues, CategoriesTableDTO, CategoriesTableProps } from './TableCategories.types';
 
-export function CategoriesTable(props: CategoriesTableProps)
-{
+export function CategoriesTable(props: CategoriesTableProps) {
   const { isLoading, setIsLoading } = props;
   const [tableValues, setTableValues] = useState<CategoriesTableValues[]>([]);
-  const usersURL = `${import.meta.env.VITE_PROD_API_URL}/items`;
+  const usersURL = `${import.meta.env.VITE_PROD_API_URL}/categories`;
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -19,15 +19,24 @@ export function CategoriesTable(props: CategoriesTableProps)
         id: responseRows.id,
         name: responseRows.name,
       } as CategoriesTableValues;
-
     });
     setTableValues(tableValues);
     setIsLoading(false);
   };
 
+  const handleDeleteItem = async (id: number) => {
+    deleteCell('/categories', id)
+      .then(() => {
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 70, editable: false, sortable: true },
-    { field: 'name', headerName: 'Category name', minWidth: 100, editable: false, sortable: true, flex: 1 },
+    { field: 'name', headerName: 'Category name', minWidth: 100, editable: true, sortable: true, flex: 1 },
     {
       field: 'actions',
       headerName: 'Actions',
@@ -35,7 +44,12 @@ export function CategoriesTable(props: CategoriesTableProps)
       editable: false,
       sortable: false,
       flex: 1,
-      renderCell: (params) => <CellActions<CategoriesTableDTO> {...params}></CellActions>,
+      renderCell: ({ id }) => (
+        <CellActions
+          handleDeleteItem={handleDeleteItem}
+          id={Number(id)}
+        ></CellActions>
+      ),
     },
   ];
 
@@ -43,7 +57,7 @@ export function CategoriesTable(props: CategoriesTableProps)
     //create a new array with the data from the response
     //and the date from the response
     const controller = new AbortController();
-    
+
     fetchData();
     return () => {
       controller.abort();

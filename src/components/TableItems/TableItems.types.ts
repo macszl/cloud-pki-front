@@ -3,17 +3,17 @@ import { UserTableDTO } from "../TableUser/TableUser.types";
 
 export type ItemsTableValues = {
   id: string;
-  name: string;
+  itemName: string;
   category: string;
-  isReady: string;
+  isItemReady: string;
   belongsTo: string;
 }
   
 export type ItemsTableDTO = {
   id: string;
-  name: string;
+  itemName: string;
   category: CategoriesTableDTO;
-  isReady: boolean;
+  isItemReady: boolean;
   belongsTo: UserTableDTO;
 }
   

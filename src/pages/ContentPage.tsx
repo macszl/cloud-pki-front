@@ -98,6 +98,7 @@ export function ContentPage() {
   };
 
   const renderAddRowButton = () => {
+
     return (
       <Grid
         width={'100%'}

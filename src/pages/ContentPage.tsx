@@ -1,33 +1,53 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 import { Box, Button, Dialog, Grid, Typography } from '@mui/material';
-import { useContext, useState } from 'react';
-import { UserTable } from '../components/TableUser/TableUser';
+import { useContext, useEffect, useState } from 'react';
 import { Header } from '../components/Header/Header';
 import { LoginForm } from '../components/LoginForm/LoginForm';
 import { RegisterForm } from '../components/RegisterForm/RegisterForm';
 import { NonLoggedInContent } from '../templates/NonLoggedInContent/NonLoggedInContent';
-import { AuthenticationContext } from '../components/AuthenticationContext/AuthenticationContextProvider';
-import { TableTypes } from '../common/tableTypes';
-import { ItemsTable } from '../components/TableItems/TableItems';
-import { CategoriesTable } from '../components/TableCategories/TableCategories';
-import { CategoryForm } from '../components/AddCategoryForm/CategoryForm';
-import { ItemForm } from '../components/AddItemForm/ItemForm';
-import { UserForm } from '../components/AddUserForm/UserForm';
+import { AuthenticationContext } from '../components/ContextAuthentication/ContextAuthenticationProvider';
+import { fetchDatabaseData } from '../common/dbInfoService';
+import { Table } from '../components/Table/Table';
+import { AddRowForm } from '../components/AddRowForm/AddRowForm';
+import { EditRowForm } from '../components/EditRowForm/EditRowForm';
+import { SQLCommandBox } from '../components/SQLCommandBox/SQLCommandBox';
 
 export function ContentPage() {
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
   const [openStatusModal, setOpenStatusModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [tableType, setTableType] = useState<TableTypes>(TableTypes.USERS);
+  const [selectedTable, setSelectedTable] = useState<string>('');
   const [statusModalMessage, setStatusModalMessage] = useState('');
+
+  const [databaseName, setDatabaseName] = useState('');
+  const [tableNames, setTableNames] = useState<string[]>([]);
+  const [databaseInfoDoneFetching, setDatabaseInfoDoneFetching] = useState<boolean>(false);
+
   const context = useContext(AuthenticationContext);
   if (!context) {
     throw new Error('AuthenticationContext is null');
   }
   const { setName, isAuthenticated, setAuthenticated } = context;
 
+  useEffect(() => {
+    setDatabaseInfoDoneFetching(false);
+    if (isAuthenticated) {
+      fetchDatabaseData()
+        .then((data) => {
+          setDatabaseName(data.databaseName);
+          setTableNames(data.tableList);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      setDatabaseInfoDoneFetching(true);
+    }
+  }, [isAuthenticated]);
+
   const [openLoginModal, setOpenLoginModal] = useState(isAuthenticated);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [SQLMode, setSQLMode] = useState(false);
 
   const handleOpenLoginModal = () => {
     setOpenLoginModal(true);
@@ -58,189 +78,106 @@ export function ContentPage() {
     }, 2000);
   };
 
-  //this opens a modal called AddUserForm to add a user to the table
-  const handleAddRowUser = () => {
+  //this opens a modal called AddItem to add an item to the table
+  const handleAddRow = () => {
     setEditMode(false);
-    setOpenDrawer(true);
-  };
-  //this opens a modal called AddItemForm to add an item to the table
-  const handleAddRowItems = () => {
-    setEditMode(false);
-    setOpenDrawer(true);
-  };
-  //this opens a modal called AddCategoryForm to add a category to the table
-  const handleAddRowCategories = () => {
-    setEditMode(false);
+    setSQLMode(false);
     setOpenDrawer(true);
   };
 
-  const handleEditRowUser = () => {
+  const handleEditRow = () => {
     setEditMode(true);
+    setSQLMode(false);
     setOpenDrawer(true);
   };
 
-  const handleEditRowItems = () => {
-    setEditMode(true);
-    setOpenDrawer(true);
-  };
-
-  const handleEditRowCategories = () => {
-    setEditMode(true);
+  const handleSQLQuery = () => {
+    setSQLMode(true);
+    setEditMode(false);
     setOpenDrawer(true);
   };
 
   const renderAddRowButton = () => {
-    if (tableType === TableTypes.CATEGORIES) {
-      return (
-        <Grid
-          width={'100%'}
-          display={'flex'}
-          justifyContent={'space-around'}
+    return (
+      <Grid
+        width={'100%'}
+        display={'flex'}
+        justifyContent={'space-around'}
+      >
+        <Button
+          size='small'
+          onClick={handleAddRow}
+          sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
         >
-          <Button
-            size='small'
-            onClick={handleAddRowCategories}
-            sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
-          >
-            Add a row
-          </Button>
-          <Button
-            size='small'
-            onClick={handleEditRowCategories}
-            sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
-          >
-            Edit a row
-          </Button>
-          <Button
-            size='small'
-            onClick={() => {
-              window.location.reload();
-            }}
-            sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
-          >
-            Refresh
-          </Button>
-        </Grid>
-      );
-    } else if (tableType === TableTypes.ITEMS) {
-      return (
-        <Grid
-          width={'100%'}
-          display={'flex'}
-          justifyContent={'space-around'}
+          Add a row
+        </Button>
+        <Button
+          size='small'
+          onClick={handleEditRow}
+          sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
         >
-          <Button
-            size='small'
-            onClick={handleAddRowItems}
-            sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
-          >
-            Add a row
-          </Button>
-          <Button
-            size='small'
-            onClick={handleEditRowItems}
-            sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
-          >
-            Edit a row
-          </Button>
-          <Button
-            size='small'
-            onClick={() => {
-              window.location.reload();
-            }}
-            sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
-          >
-            Refresh
-          </Button>
-        </Grid>
-      );
-    } else if (tableType === TableTypes.USERS) {
-      return (
-        <Grid
-          width={'100%'}
-          display={'flex'}
-          justifyContent={'space-around'}
+          Edit a row
+        </Button>
+        <Button
+          size='small'
+          onClick={handleSQLQuery}
+          sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
         >
-          <Button
-            size='small'
-            onClick={handleAddRowUser}
-            sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
-          >
-            Add a row
-          </Button>
-          <Button
-            size='small'
-            onClick={handleEditRowUser}
-            sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
-          >
-            Edit a row
-          </Button>
-          <Button
-            size='small'
-            onClick={() => {
-              window.location.reload();
-            }}
-            sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
-          >
-            Refresh
-          </Button>
-        </Grid>
-      );
-    } else {
-      return null;
-    }
+          Send SQL query
+        </Button>
+        <Button
+          size='small'
+          onClick={() => {
+            window.location.reload();
+          }}
+          sx={{ marginTop: 2, marginBottom: 2, width: '6rem' }}
+        >
+          Refresh
+        </Button>
+      </Grid>
+    );
   };
 
   const renderTable = () => {
-    if (tableType === TableTypes.CATEGORIES) {
-      return (
-        <CategoriesTable
-          isLoading={isLoading}
-          setIsLoading={setIsLoading}
-        />
-      );
-    } else if (tableType === TableTypes.ITEMS) {
-      return (
-        <ItemsTable
-          isLoading={isLoading}
-          setIsLoading={setIsLoading}
-        />
-      );
-    } else if (tableType === TableTypes.USERS) {
-      return (
-        <UserTable
-          isLoading={isLoading}
-          setIsLoading={setIsLoading}
-        />
-      );
-    } else {
-      return null;
-    }
+    return (
+      <Table
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
+        tableName={selectedTable}
+        setOpenStatusModal={setOpenStatusModal}
+        setStatusModalMessage={setStatusModalMessage}
+      />
+    );
   };
 
-  const renderAddForm = () => {
-    if (tableType === TableTypes.CATEGORIES) {
+  const renderForm = () => {
+    if (!editMode && !SQLMode) {
       return (
-        <CategoryForm
+        <AddRowForm
           open={openDrawer}
           setOpen={setOpenDrawer}
-          isEditMode={editMode}
+          tableName={selectedTable}
+          setOpenStatusModal={setOpenStatusModal}
+          setStatusModalMessage={setStatusModalMessage}
         />
       );
-    } else if (tableType === TableTypes.ITEMS) {
+    } else if (editMode && !SQLMode) {
       return (
-        <ItemForm
+        <EditRowForm
           open={openDrawer}
           setOpen={setOpenDrawer}
-          isEditMode={editMode}
+          tableName={selectedTable}
+          setOpenStatusModal={setOpenStatusModal}
+          setStatusModalMessage={setStatusModalMessage}
         />
       );
     } else {
       return (
-        <UserForm
+        <SQLCommandBox
           open={openDrawer}
           setOpen={setOpenDrawer}
-          isEditMode={editMode}
+          setOpenStatusModal={setOpenStatusModal}
+          setStatusModalMessage={setStatusModalMessage}
         />
       );
     }
@@ -265,7 +202,9 @@ export function ContentPage() {
           handleOpenLoginModal={handleOpenLoginModal}
           handleOpenRegisterModal={handleOpenRegisterModal}
           handleLogout={handleLogout}
-          handleChooseTable={setTableType}
+          handleChooseTable={setSelectedTable}
+          tableNames={tableNames ? tableNames : []}
+          databaseName={databaseName ? databaseName : 'Database not ready'}
         />
       </Grid>
       <Grid
@@ -281,8 +220,9 @@ export function ContentPage() {
         lg={12}
         xl={12}
       >
-        {isAuthenticated && renderAddRowButton()}
-        {isAuthenticated && renderTable()}
+        {isAuthenticated && databaseInfoDoneFetching && selectedTable !== '' && renderAddRowButton()}
+        {isAuthenticated && databaseInfoDoneFetching && selectedTable !== '' && renderTable()}
+        {isAuthenticated && databaseInfoDoneFetching && selectedTable === '' && <Typography textAlign={'center'}>No table selected</Typography>}
         {!isAuthenticated && <NonLoggedInContent />}
       </Grid>
       <Dialog
@@ -333,12 +273,14 @@ export function ContentPage() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            minHeight: '10rem',
+            minWidth: '20rem',
           }}
         >
           <Typography textAlign={'center'}> {statusModalMessage}</Typography>
         </Box>
       </Dialog>
-      {isAuthenticated && renderAddForm()}
+      {isAuthenticated && databaseInfoDoneFetching && selectedTable !== '' && renderForm()}
     </Grid>
   );
 }

@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 import jwtDecode from 'jwt-decode';
 import { createContext, useState, useEffect } from 'react';
 import { DecodedToken } from '../../common/decodedToken.types';
-import { AuthenticationContextProps, AuthenticationContextProviderProps } from './AuthenticationContext.types';
+import { AuthenticationContextProps, AuthenticationContextProviderProps } from './ContextAuthentication.types';
 
 export const AuthenticationContext = createContext<AuthenticationContextProps | null>(null);
 

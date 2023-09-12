@@ -1,29 +1,14 @@
-import {
-  AppBar,
-  Toolbar,
-  Button,
-  Grid,
-  Typography,
-  Drawer,
-  List,
-  Divider,
-  IconButton,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  SvgIcon,
-} from '@mui/material';
-import { useContext, useState } from 'react';
-import { AuthenticationContext } from '../AuthenticationContext/AuthenticationContextProvider';
+/* eslint-disable @typescript-eslint/no-magic-numbers */
+import { AppBar, Toolbar, Button, Grid, Typography, Drawer, List, Divider, IconButton, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { useContext, useState, useEffect } from 'react';
+import { AuthenticationContext } from '../ContextAuthentication/ContextAuthenticationProvider';
 import { DashboardItem, HeaderProps } from './Header.types';
-import { Person, Category, Inventory, ChevronLeft, Menu } from '@mui/icons-material';
-import { TableTypes } from '../../common/tableTypes';
+import { ChevronLeft, Menu } from '@mui/icons-material';
 
 export function Header(props: HeaderProps) {
-  const { handleOpenLoginModal, handleOpenRegisterModal, handleLogout, handleChooseTable } = props;
+  const { handleOpenLoginModal, handleOpenRegisterModal, handleLogout, handleChooseTable, tableNames, databaseName } = props;
   const [open, setOpen] = useState(false);
-
+  const [drawerItems, setDrawerItems] = useState<DashboardItem[]>([]); // ['Table1', 'Table2', 'Table3'
   const context = useContext(AuthenticationContext);
   if (!context) {
     throw new Error('AuthenticationContext is null');
@@ -38,26 +23,20 @@ export function Header(props: HeaderProps) {
     setOpen(false);
   };
 
-  const drawerItems: DashboardItem[] = [];
   const drawerWidth = 240;
 
-  drawerItems.push(
-    {
-      icon: Person,
-      title: 'Users',
-      state: TableTypes.USERS,
-    },
-    {
-      icon: Category,
-      title: 'Categories',
-      state: TableTypes.CATEGORIES,
-    },
-    {
-      icon: Inventory,
-      title: 'Items',
-      state: TableTypes.ITEMS,
+  useEffect(() => {
+    // Whenever tableNames changes, update drawerItems accordingly.
+    if (tableNames && tableNames.length > 0) {
+      const newDrawerItems = tableNames.map((tableName) => {
+        return { title: tableName };
+      });
+      setDrawerItems(newDrawerItems);
+    } else {
+      // Handle the case when tableNames is empty or not available.
+      setDrawerItems([]);
     }
-  );
+  }, [tableNames]);
 
   return (
     <AppBar
@@ -143,15 +122,9 @@ export function Header(props: HeaderProps) {
                     >
                       <ListItemButton
                         onClick={() => {
-                          handleChooseTable(item.state);
+                          handleChooseTable(item.title);
                         }}
                       >
-                        <ListItemIcon>
-                          <SvgIcon
-                            color={'inherit'}
-                            component={item.icon}
-                          />
-                        </ListItemIcon>
                         <ListItemText primary={item.title} />
                       </ListItemButton>
                     </ListItem>
@@ -165,14 +138,17 @@ export function Header(props: HeaderProps) {
               variant='text'
               color='inherit'
               sx={{ fontFamily: 'Inter', fontSize: '1rem', textTransform: 'none', width: '6rem' }}
-              
               onClick={handleLogout}
             >
               Logout
             </Button>
           </Grid>
           <Grid>
-            <Typography sx={{ fontFamily: 'Inter', fontSize: '1rem', textTransform: 'none' }}> Currently logged in as {name} </Typography>
+            {name !== null && (
+              <Typography sx={{ fontFamily: 'Inter', fontSize: '1rem', textTransform: 'none' }}>
+                {`Currently logged in as ${name}, browsing through database ${databaseName.toString()}`}
+              </Typography>
+            )}
           </Grid>
         </Toolbar>
       )}

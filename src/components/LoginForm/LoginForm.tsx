@@ -39,7 +39,7 @@ export function LoginForm(props: FormProps) {
           .catch(() => {
             //open a dialog menu with error
             setOpenStatusModal(true);
-            setStatusModalMessage("Error. Please check your login and password.");
+            setStatusModalMessage('Error. Please check your login and password.');
           })
           .finally(() => {
             setSubmitting(false);

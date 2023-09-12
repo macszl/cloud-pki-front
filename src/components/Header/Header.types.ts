@@ -1,15 +1,12 @@
-import { SvgIconComponent } from "@mui/icons-material";
-import { TableTypes } from "../../common/tableTypes";
-
 export type HeaderProps = {
   handleOpenLoginModal: () => void;
   handleOpenRegisterModal: () => void;
   handleLogout: () => void;
-  handleChooseTable: (table: TableTypes) => void;
-}
+  handleChooseTable: (tableName: string) => void;
+  tableNames: string[];
+  databaseName: string;
+};
 
 export type DashboardItem = {
-  icon: SvgIconComponent,
-  title: string,
-  state: TableTypes,
-}
+  title: string;
+};

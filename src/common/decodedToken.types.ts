@@ -1,7 +1,6 @@
 export type DecodedToken = {
-  name: string,
-  isAdmin: boolean,
-  iat: number,
-  exp: number
-}
-
+  name: string;
+  isAdmin: boolean;
+  iat: number;
+  exp: number;
+};

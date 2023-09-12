@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 import jwtDecode from 'jwt-decode';
 import { createContext, useState, useEffect } from 'react';
 import { DecodedToken } from '../../common/decodedToken.types';

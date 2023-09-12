@@ -146,7 +146,7 @@ export function Header(props: HeaderProps) {
           <Grid>
             {name !== null && (
               <Typography sx={{ fontFamily: 'Inter', fontSize: '1rem', textTransform: 'none' }}>
-                {`Currently logged in as ${name}, browsing through database ${databaseName.toString()}`}
+                {`Currently logged in as ${name}, browsing through database ${databaseName}`}
               </Typography>
             )}
           </Grid>

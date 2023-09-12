@@ -39,7 +39,7 @@ export function EditRowForm(props: EditRowFormProps) {
     event?.preventDefault();
 
     if (inputFieldStates.id === null || inputFieldStates.id === undefined || inputFieldStates.id === '') {
-      return null;
+      return;
     }
 
     editCell(`${apiUrl}/executeSqlQuery`, `${tableName}`, columnDefs, inputFieldStates, Number(inputFieldStates.id))

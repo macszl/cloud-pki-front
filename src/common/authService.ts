@@ -1,3 +1,5 @@
+/* eslint-disable no-promise-executor-return */
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 import axios, { AxiosError } from 'axios';
 import { LoginFormDTO } from '../components/LoginForm/LoginForm.types';
 import { JWTResponse, RegisterFormDTO } from '../components/RegisterForm/RegisterForm.types';
@@ -14,6 +16,9 @@ export const registerUser = async (user: RegisterFormDTO) => {
   //     throw new Error('Unknown error. Please try again later.');
   //   }
   // }
+  await new Promise((f) => {
+    return setTimeout(f, 1000);
+  });
   throw new Error(`Unknown error. Please try again later. Will not register user with username: ${user.login}`);
 };
 

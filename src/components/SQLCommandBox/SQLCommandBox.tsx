@@ -28,7 +28,7 @@ export function SQLCommandBox(props: SQLCommandBoxProps) {
     event?.preventDefault();
 
     if (inputFieldState === null || inputFieldState === undefined || inputFieldState === '') {
-      return null;
+      return;
     }
 
     sendSQLCommand(`${apiUrl}/executeSqlQuery`, inputFieldState)

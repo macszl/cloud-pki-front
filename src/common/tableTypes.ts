@@ -1,6 +1,5 @@
 export enum TableTypes {
-    USERS = "USERS",
-    ITEMS = "ITEMS",
-    CATEGORIES = "CATEGORIES",
+  USERS = 'USERS',
+  ITEMS = 'ITEMS',
+  CATEGORIES = 'CATEGORIES',
 }
-    
